@@ -1,8 +1,8 @@
-import { useState, ReactNode, createContext, useContext, useEffect } from 'react'
+import { useState, ReactNode, createContext, useContext } from 'react'
 import AuthUtils from '../utils/auth-utils';
 import { User } from '../models/interface/User';
 import { LoginResponse } from '../models/interface/auth';
-import { jwtVerify, SignJWT } from 'jose';
+import { SignJWT } from 'jose';
 import { useNavigate } from 'react-router-dom';
 
 

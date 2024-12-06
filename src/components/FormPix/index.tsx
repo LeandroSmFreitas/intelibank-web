@@ -3,7 +3,6 @@ import Input from '../Input'
 import Button from '../Button'
 import * as S from './styles'
 import { useFormPix } from './hooks/formPixHook'
-import QRCode from 'react-qr-code'
 import Modal from '../modal'
 import { Mask } from '../../models/enum/input'
 

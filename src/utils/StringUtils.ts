@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import { Mask } from "../models/enum/input";
 
 const formatToCurrency = (value: string, isMask?: boolean): string => {
