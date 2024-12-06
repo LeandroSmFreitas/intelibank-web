@@ -1,6 +1,5 @@
 
 
-import React from 'react'
 import Input from '../Input'
 import Button from '../Button'
 import * as S from './styles'
