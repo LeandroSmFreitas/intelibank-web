@@ -9,12 +9,14 @@ function App() {
   
 
   return (
-    <BrowserRouter>
-      <AppProvider>
-          <AppRoutes/>
-      </AppProvider>
+    <>
+      <BrowserRouter>
+        <AppProvider>
+            <AppRoutes/>
+        </AppProvider>
+      </BrowserRouter>
       <SpeedInsights />
-    </BrowserRouter>
+    </>
   )
 }
 
