@@ -18,6 +18,9 @@ export const ContainerForm = styled.form`
     margin-top: 50px;
     background-color: #fff;
     padding: 20px;
+    button{
+        margin-right: 0px;
+    }
 `;
 
 export const CompanyName = styled.span`

@@ -11,7 +11,7 @@ import { useTransaction } from './hooks/transactionHook'
 import * as S from './styles'
 
 const Transaction = () => {
-  const { showData, handleShowData, balance } = useTransaction()
+  const { showData, handleShowData, balance, logout } = useTransaction()
   return (
     <S.Container>
         <SideBar />
@@ -19,7 +19,7 @@ const Transaction = () => {
                 <S.ContainerTitleAndButton>
                     <S.Title>Transação</S.Title>
                     <S.ContainerButton>
-                        <Button text='Sair' click={() => {}}/>
+                        <Button text='Sair' click={logout}/>
                     </S.ContainerButton>
                 </S.ContainerTitleAndButton>
                 <Card title='Seu saldo' value={balance}/>

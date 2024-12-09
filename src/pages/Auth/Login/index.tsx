@@ -19,7 +19,7 @@ const Login = () => {
         <S.TitleForm>Entrar</S.TitleForm>
         <S.DescriptionForm>Informe seu e-mail e senha para acessar sua conta</S.DescriptionForm>
         <Input placeholder="Insira seu e-mail" title="E-mail" {...register("email")} error={errors.email?.message}/>
-        <Input placeholder="Insira sua senha" title="Senha" {...register("password")} error={errors.password?.message}/>
+        <Input placeholder="Insira sua senha" title="Senha" type="password" {...register("password")} error={errors.password?.message}/>
         <S.ForgotPassword href="/forgotPassword">Esqueceu sua senha?</S.ForgotPassword>
         <Button text="Entrar" type="submit"/>
         <Button text="Criar conta" click={() => navigate("/register")} type="button"/>

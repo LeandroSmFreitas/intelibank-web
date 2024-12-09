@@ -5,8 +5,7 @@ import { StringUtils } from '../utils/StringUtils';
 import AuthUtils from '../utils/auth-utils';
 import { useAuth } from './auth';
 
-
-interface TransactionContextData{
+interface TransactionContextData {
     deposit: (amount: number) => string;
     handleGetUserBalance: () => string;
     verifyTransferPassword: (password: string) => boolean | string;
@@ -16,169 +15,132 @@ interface TransactionContextData{
     balanceTransactions: string;
 }
 
-interface TransactionProviderProps{
-    children: ReactNode
+interface TransactionProviderProps {
+    children: ReactNode;
 }
 
-const TransactionContext = createContext<TransactionContextData>({} as TransactionContextData)
+const TransactionContext = createContext<TransactionContextData>({} as TransactionContextData);
 
 const TransactionProvider = ({ children }: TransactionProviderProps) => {
     const [balance, setBalance] = useState<string>("0");
     const [balanceTransactions, setBalanceTransactions] = useState<string>("0");
     const { verifyToken } = useAuth();
-    
-    const deposit = (amount: number): string => {
+
+    const getUserEmailFromToken = (): string | null => {
         const token = AuthUtils.getToken();
-    
+
         if (!token || !verifyToken()) {
-            return 'Token inválido ou expirado';
+            return null;
         }
-    
+
         const jwt = JSON.parse(atob(token.split('.')[1]));
-        const email = jwt.email;
+        return jwt.email;
+    };
     
+    const findUser = (email: string): { user: User | null, index: number } => {
         const usuarios: User[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-        const usuarioIndex = usuarios.findIndex(user => user.email === email);
-    
-        if (usuarioIndex === -1) {
-            return 'Usuário não encontrado';
-        }
-    
-        usuarios[usuarioIndex].balance = (parseFloat(usuarios[usuarioIndex].balance) + amount).toString();
+        const index = usuarios.findIndex(user => user.email === email);
+        return { user: usuarios[index] || null, index };
+    };
+
+    const deposit = (amount: number): string => {
+        const email = getUserEmailFromToken();
+        if (!email) return 'Token inválido ou expirado';
+
+        const { user, index } = findUser(email);
+        if (!user || index === -1) return 'Usuário não encontrado';
+
+        const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+        usuarios[index].balance = (parseFloat(user.balance) + amount).toFixed(2);
         localStorage.setItem('usuarios', JSON.stringify(usuarios));
         handleGetUserBalance();
         return 'Depósito realizado com sucesso';
     };
 
     const handleGetUserBalance = (): string => {
-        const token = AuthUtils.getToken();
-    
-        if (!token || !verifyToken()) {
-            return 'Token inválido ou expirado';
-        }
+        const email = getUserEmailFromToken();
+        if (!email) return 'Token inválido ou expirado';
 
-        const jwt = JSON.parse(atob(token.split('.')[1]));
-        const email = jwt.email;
-        const usuarios: User[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-        const usuario = usuarios.find(user => user.email === email);
-    
-        if (!usuario || !usuario.balance) {
-            return "0";
-        }
-
-        setBalance(StringUtils.formatToCurrency(balance));
-    
-        return usuario.balance;
+        const { user } = findUser(email);
+        const userBalance = user?.balance || "0";
+        setBalance(StringUtils.formatToCurrency(userBalance));
+        return userBalance;
     };
 
     const handleAddTransaction = (transaction: Transaction): string => {
-        const token = AuthUtils.getToken();
-    
-        if (!token || !verifyToken()) {
-            return 'Token inválido ou expirado';
-        }
-    
-        const jwt = JSON.parse(atob(token.split('.')[1]));
-        const email = jwt.email;
-    
-        const usuarios: User[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-        const usuarioIndex = usuarios.findIndex(user => user.email === email);
-    
-        if (usuarioIndex === -1) {
-            return 'Usuário não encontrado';
-        }
-    
-        const usuario = usuarios[usuarioIndex];
-        if (!usuario.transactions) {
-            usuario.transactions = [];
-        }
+        const email = getUserEmailFromToken();
+        if (!email) return 'Token inválido ou expirado';
 
-        usuario.balance = (parseFloat(usuario.balance) - transaction.value).toString();
-    
-        usuario.transactions.push({ ...transaction, id: crypto.randomUUID(), date: new Date().toISOString() });
-    
-        usuarios[usuarioIndex] = usuario;
+        const { user, index } = findUser(email);
+        if (!user || index === -1) return 'Usuário não encontrado';
+
+        const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+        if (!user.transactions) user.transactions = [];
+
+        const newBalance = parseFloat(user.balance) - transaction.value;
+        if (newBalance < 0) return 'Saldo insuficiente';
+
+        user.balance = newBalance.toFixed(2);
+        user.transactions.push({ ...transaction, id: crypto.randomUUID(), date: new Date().toISOString() });
+
+        usuarios[index] = user;
         localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    
+        handleGetUserBalance();
+        handleGetUserTransactions();
+
         return 'Transação registrada com sucesso';
     };
 
     const handleGetUserTransactions = (): Transaction[] => {
-        const token = AuthUtils.getToken();
-    
-        if (!token || !verifyToken()) {
-            return [];
-        }
+        const email = getUserEmailFromToken();
+        if (!email) return [];
 
-        const jwt = JSON.parse(atob(token.split('.')[1]));
-        const email = jwt.email;
-        const usuarios: User[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-        const usuario = usuarios.find(user => user.email === email);
-    
-        if (!usuario || !usuario.transactions) {
-            return [];
-        }
+        const { user } = findUser(email);
+        const transactions = user?.transactions || [];
+        const totalTransactions = transactions.reduce((total, tx) => total + parseFloat(tx.value.toString()), 0);
 
-        setBalanceTransactions(StringUtils.formatToCurrency(calculateTotalTransactions(usuario.transactions).toString()));
-    
-        return usuario.transactions;
-    };
-
-    useEffect(() => {
-        const balance = handleGetUserBalance();
-            setBalance(StringUtils.formatToCurrency(balance));
-    }
-    , [handleGetUserBalance]);
-
-    const calculateTotalTransactions = (transactions: Transaction[]): number => {
-        return transactions.reduce((total, transaction) => total + parseFloat(transaction?.value?.toString()), 0);
+        setBalanceTransactions(StringUtils.formatToCurrency(totalTransactions.toFixed(2)));
+        return transactions;
     };
 
     const verifyTransferPassword = (password: string): boolean | string => {
-        const token = AuthUtils.getToken();
+        const email = getUserEmailFromToken();
+        if (!email) return 'Token inválido ou expirado';
 
-        if (!token || !verifyToken()) {
-            return 'Token inválido ou expirado';
-        }
+        const { user } = findUser(email);
+        if (!user) return 'Usuário não encontrado';
 
-        const jwt = JSON.parse(atob(token.split('.')[1]));
-        const email = jwt.email;
+        return user.transferPassword === password;
+    };
 
-        const usuarios: User[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-        const usuarioIndex = usuarios.findIndex(user => user.email === email);
-
-        if (usuarioIndex === -1) {
-            return 'Usuário não encontrado';
-        }
-
-        const usuario = usuarios[usuarioIndex];
-
-        // Verifica a senha de transferência
-        if (usuario.transferPassword !== password) {
-            return false;
-        }
-
-        return true;
-    }
+    useEffect(() => {
+        handleGetUserBalance();
+        handleGetUserTransactions();
+    }, []);
 
     return (
-        <TransactionContext.Provider value={{
-            deposit,
-            handleGetUserBalance,
-            handleAddTransaction,
-            handleGetUserTransactions,
-            balance,
-            balanceTransactions,
-            verifyTransferPassword,
-        }}>
+        <TransactionContext.Provider
+            value={{
+                deposit,
+                handleGetUserBalance,
+                handleAddTransaction,
+                handleGetUserTransactions,
+                balance,
+                balanceTransactions,
+                verifyTransferPassword,
+            }}
+        >
             {children}
         </TransactionContext.Provider>
-    )
-}
+    );
+};
 
 function useContextTransaction(): TransactionContextData {
-    const context = useContext(TransactionContext)
-    return context
+    const context = useContext(TransactionContext);
+    if (!context) {
+        throw new Error('useContextTransaction must be used within a TransactionProvider');
+    }
+    return context;
 }
 
 export { TransactionProvider, useContextTransaction };
