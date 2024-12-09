@@ -8,7 +8,6 @@ interface TableProps {
 const Table = ({ lastTransaction }: TableProps) => {
   const { transactions } = useTable();
 
-  // Filtrar as transações se `lastTransaction` for `true`
   const displayedTransactions = lastTransaction
     ? transactions.slice(0, 5)
     : transactions;

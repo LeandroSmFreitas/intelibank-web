@@ -1,7 +1,6 @@
 class AuthUtils {
     static AUTH_TOKEN_KEY = 'auth-token';
-  
-    // Função para configurar o cookie com HttpOnly e as melhores práticas de segurança
+
     static setToken = (token: string) => {
       const cookieOptions = {
         path: '/',
@@ -10,7 +9,6 @@ class AuthUtils {
         httpOnly: false,
       };
   
-      // Define o cookie
       const cookieString = `${AuthUtils.AUTH_TOKEN_KEY}=${token}; path=${cookieOptions.path}; max-age=${cookieOptions.maxAge}; samesite=${cookieOptions.sameSite}`;
       document.cookie = cookieString;
     };

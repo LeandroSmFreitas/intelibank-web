@@ -17,7 +17,7 @@ export const UseLogin = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-          navigate("/dashboard"); // Redireciona para o dashboard
+          navigate("/dashboard");
         }
       }, [isAuthenticated]);
 
