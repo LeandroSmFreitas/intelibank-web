@@ -61,11 +61,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             .setExpirationTime('1w')
             .sign(SECRET_KEY);
 
-        console.log(token)
-
         AuthUtils.setToken(token);
-
-        console.log(AuthUtils.getToken())
 
         return { message: 'Login bem-sucedido', token };
     }

@@ -33,7 +33,6 @@ export const UseLogin = () => {
     const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
         const res = await logar(data.email, data.password)
         if(res.token){
-            console.log(res.token)
             AuthUtils.setToken(res.token)
             setIsAuthenticated(true);
             navigate("/dashboard")

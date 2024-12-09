@@ -33,7 +33,6 @@ export const useFormPix = () => {
     }
 
     const handleCloseButton = (data?: Transaction) => {
-        console.log(data)
         data && handleAddTransaction(data);
         setOpen(false);
     }
@@ -67,7 +66,6 @@ export const useFormPix = () => {
                 handleOpen();
             }else{
                 setErrorBalance(false);
-                console.log(data)
                 modalPassword({
                     id: Math.floor(100000 + Math.random() * 900000).toString(),
                     name: data.name,
@@ -86,7 +84,7 @@ export const useFormPix = () => {
             setChildrenModal(
                 <S.ContainerModal>
                     <S.TitleModal>Para realizar a ação você deve confirmar a sua senha de transferência</S.TitleModal>
-                    <Input title='Senha de transferência' placeholder='Digite a sua senha de transferência' setValue={(value: string) => pass = value}/>
+                    <Input title='Senha de transferência' type='password' placeholder='Digite a sua senha de transferência' setValue={(value: string) => pass = value}/>
                     <Button text='Finalizar' click={() => handleCheckPassword(pass, data)} />
                 </S.ContainerModal>
             );

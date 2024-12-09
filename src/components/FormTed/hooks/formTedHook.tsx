@@ -83,7 +83,7 @@ export const useFormTed = () => {
             setChildrenModal(
                 <S.ContainerModal>
                     <S.TitleModal>Para realizar a ação você deve confirmar a sua senha de transferência</S.TitleModal>
-                    <Input title='Senha de transferência' placeholder='Digite a sua senha de transferência' setValue={(value: string) => pass = value}/>
+                    <Input title='Senha de transferência' type='password' placeholder='Digite a sua senha de transferência' setValue={(value: string) => pass = value}/>
                     <Button text='Finalizar' click={() => handleCheckPassword(pass, data)} />
                 </S.ContainerModal>
             );
