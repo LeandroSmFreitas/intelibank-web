@@ -1,50 +1,77 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# IntelliBank 💳
 
-Currently, two official plugins are available:
+IntelliBank é uma aplicação bancária simples desenvolvida com React, projetada para gerenciar cadastros e transações financeiras. Este projeto foi criado com foco em simplicidade e rapidez, utilizando LocalStorage para persistência de dados e Context API para gerenciamento de estados globais.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+## 🚀 Funcionalidades
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+	•	Cadastro de Clientes: Registro de novos usuários no sistema.
+	•	Depósitos e Transações: Realize depósitos e visualize o histórico de transações.
+	•	Gerenciamento de Saldo: Controle e exibição de saldos atualizados.
+	•	Armazenamento Local: Persistência de dados através do LocalStorage.
+	•	Desempenho Monitorado: Métricas de performance obtidas pelo Speed Insights.
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 📂 Estrutura do Projeto
+
+```
+src/
+├── components/         # Componentes reutilizáveis da aplicação
+├── config/             # Configurações gerais do projeto
+├── i18n/               # Definição dos idiomas suportados
+├── models/             # Definição das interfaces usadas (ex.: User, Transaction)
+├── pages/              # Componentes das páginas principais
+├── routes/             # Gerenciamento de rotas publicas e privadas
+├── context/            # Configuração do Context API para variáveis globais
+├── utils/              # Funções auxiliares como formatação de valores
+└── App.js              # Entrada principal da aplicação
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 🛠️ Tecnologias Utilizadas
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+	•	React: Biblioteca principal para construção da interface do usuário.
+	•	Context API: Gerenciamento de estados globais de forma simples e eficiente.
+	•	LocalStorage: Persistência de dados do cliente no navegador.
+	•	Speed Insights: Análise e otimização de desempenho da aplicação.
+
+
+## 🏗️ Por que essas escolhas?
+
+	•	Context API: Escolhida por sua simplicidade e eficiência em aplicações de pequeno a médio porte.
+	•	LocalStorage: Uma solução rápida e prática para armazenar os dados de clientes e transações localmente.
+	•	Separação de Lógica e Componentes: Para manter o código limpo, a lógica está encapsulada em hooks dentro da pasta hooks, deixando os componentes responsáveis apenas pela interface.
+
+
+## 📈 Métricas de Desempenho
+
+Utilizei o Speed Insights para monitorar e otimizar o desempenho da aplicação, garantindo uma experiência fluida para o usuário.
+
+![App Screenshot](src/assets/performance.png)
+## Rodando localmente
+
+Clone o projeto
+
+```bash
+  git clone https://github.com/LeandroSmFreitas/intelibank-web.git
 ```
+
+Entre no diretório do projeto
+
+```bash
+  cd intelibank-web
+```
+
+Instale as dependências
+
+```bash
+  yarn
+```
+
+Inicie o servidor
+
+```bash
+  yarn dev
+```
+
