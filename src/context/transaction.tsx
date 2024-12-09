@@ -36,7 +36,7 @@ const TransactionProvider = ({ children }: TransactionProviderProps) => {
         const jwt = JSON.parse(atob(token.split('.')[1]));
         return jwt.email;
     };
-    
+
     const findUser = (email: string): { user: User | null, index: number } => {
         const usuarios: User[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
         const index = usuarios.findIndex(user => user.email === email);
@@ -62,8 +62,8 @@ const TransactionProvider = ({ children }: TransactionProviderProps) => {
         if (!email) return 'Token inválido ou expirado';
 
         const { user } = findUser(email);
-        const userBalance = user?.balance || "0";
-        setBalance(StringUtils.formatToCurrency(userBalance));
+        const userBalance = StringUtils.formatToCurrency(user?.balance || "0");
+        setBalance(userBalance);
         return userBalance;
     };
 
