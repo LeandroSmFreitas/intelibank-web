@@ -11,9 +11,9 @@ function App() {
   return (
     <BrowserRouter>
       <AppProvider>
-          <SpeedInsights />
           <AppRoutes/>
       </AppProvider>
+      <SpeedInsights />
     </BrowserRouter>
   )
 }
